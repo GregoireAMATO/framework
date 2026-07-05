@@ -11,14 +11,16 @@
     "./skills/01-ticket-info",
     "./skills/02-user-stories",
     "./skills/03-prd",
-    "./skills/04-spec"
+    "./skills/04-spec",
+    "./skills/05-epic-breakdown"
   ],
   "keywords": [
     "product-management",
     "user-stories",
     "prd",
     "specification",
-    "tickets"
+    "tickets",
+    "epic-breakdown"
   ],
   "repository": "https://github.com/ai-driven-dev/framework",
   "homepage": "https://ai-driven.dev",

@@ -1,0 +1,110 @@
+# Checklist used by the reviewer agent to validate a set of produced epics.
+# Each criterion maps to one Done-when item from the spec.
+# Required criteria must be `fulfilled` for the epic set to pass.
+
+criteria:
+  - id: coverage_100_percent
+    description: |
+      Every `### Feature N - <name>` subsection under `## 4. Core Features` in the source PRD
+      is referenced by exactly one epic in the `source_features` field. No feature is orphaned
+      (missing from all epics). No extra features appear in epics without a PRD basis.
+      Verified by running `coverage-check` and confirming `missing[]` and `extra[]` are both empty
+      and the mapping is bijective (one feature → one epic, no feature referenced by multiple epics).
+    required: true
+    weight: 25
+    maps_to_done_when: 1
+
+  - id: required_fields_structure
+    description: |
+      Every produced epic artifact contains all mandatory fields:
+      (1) `epic_id` in the frontmatter (format: `EPIC-<feature-slug>`),
+      (2) a non-empty Title heading,
+      (3) a non-empty `## Objective` section,
+      (4) a non-empty `## Scope` section,
+      (5) a `## Source PRD reference` section with the PRD path,
+      (6) a `## Source feature(s)` section naming at least one `### Feature N` heading.
+      Gaps are acceptable as `TBD: <question>` but the section itself must be present.
+    required: true
+    weight: 20
+    maps_to_done_when: 2
+
+  - id: valid_input_gate
+    description: |
+      When the `breakdown` action is given an absent file path, a file that lacks a line containing
+      both `Status` and `Approved` (tolerant of bold markers and whitespace — matches
+      `Status: Approved`, `**Status** : Approved`, `**Status**: Approved`, etc.), or a file that
+      lacks `## 4. Core Features`, it returns an explicit error message demanding a validated PRD
+      and produces zero epic artifacts. Verified by running the action with each invalid input type
+      and confirming no epic files are created.
+    required: true
+    weight: 15
+    maps_to_done_when: 3
+
+  - id: output_target_respected
+    description: |
+      The `output_target` parameter is honoured:
+      - `file` → epic `.md` files exist under `aidd_docs/tasks/<prd_yyyy_mm>/`.
+      - `ticket` → one tracker issue created per epic via `aidd-vcs:04-issue-create`; when no
+        ticketing tool is configured the action warns and degrades to `file` mode.
+      - `both` → both file artifacts and tracker issues are produced.
+      Verified by one test per output mode.
+    required: true
+    weight: 15
+    maps_to_done_when: 4
+
+  - id: idempotence
+    description: |
+      Running `breakdown` twice on the same PRD produces the same set of epic files
+      (same count, same `epic_id` values, same filenames). No additional files are created
+      on the second run. In ticket mode, no duplicate issues are created.
+      Verified by running `coverage-check` after two passes: `missing[]`, `extra[]`, and
+      `duplicates[]` are all empty and the count matches the first run.
+    required: true
+    weight: 15
+    maps_to_done_when: 5
+
+  - id: tbd_for_gaps
+    description: |
+      Every field whose value cannot be determined from the source PRD is emitted as
+      `TBD: <precise question>` rather than an invented or guessed value.
+      Epics produced from a deliberately incomplete PRD must contain at least one `TBD:` marker
+      for each missing field. No field value is fabricated.
+    required: true
+    weight: 10
+    maps_to_done_when: 6
+
+  - id: no_implementation_detail
+    description: |
+      No epic artifact contains a technology choice (framework, language, library), a file-system
+      path to source code, a design pattern name, or any other implementation detail.
+      Content is limited to what (outcome) and why (value/problem). Optional: a reviewer may flag
+      any sentence that implies how the solution is built as a violation.
+    required: false
+    weight: 5
+    maps_to_done_when: null
+
+  - id: source_traceability
+    description: |
+      Each epic's `## Source PRD reference` and `## Source feature(s)` sections are populated
+      with the exact PRD file path and the verbatim `### Feature N - <name>` heading(s) from
+      the PRD. The `source_prd` and `source_features` frontmatter fields match these sections.
+    required: false
+    weight: 5
+    maps_to_done_when: null
+
+hard_thresholds:
+  any_required_criterion_unfulfilled: invalid
+  epic_missing_required_field: invalid
+  feature_orphaned_in_prd: invalid
+  feature_covered_by_multiple_epics: invalid
+  implementation_detail_present: invalid
+  invented_value_without_tbd_marker: invalid
+
+scoring:
+  pass_threshold: 90
+  notes: |
+    An epic set is valid when every required criterion is fulfilled AND the weighted score
+    is at or above pass_threshold (90). Hard thresholds force `invalid` regardless of score.
+    A single orphaned PRD feature, a single epic missing a required field, or a single invented
+    value without a TBD marker each independently force `invalid`.
+    Use `coverage-check` (action 02) to generate the coverage matrix before running this validator.

@@ -1,12 +1,14 @@
 ---
 name: 01-bootstrap
 description: Design and validate a new SaaS's architecture into an INSTALL.md via Q&A and stack comparison. Use when the user starts a project, chooses a stack, or picks an architecture pattern. Not for editing an existing stack or scaffolding code.
-argument-hint: gather-needs | propose-candidates | audit-candidates | pick-and-design | write-install-md
+argument-hint: gather-needs | propose-candidates | audit-candidates | pick-and-design | write-install-md | gather-from-prd
 ---
 
 # Bootstrap
 
 Plays the role of technical architect for a new SaaS project. Walks the user through a 24-item checklist (18 user-input + 6 derived), proposes 2-3 candidate stacks, audits each via parallel agents, then produces `aidd_docs/INSTALL.md` capturing the technical vision, decisions, stack, architecture pattern, folder tree, and install steps. Documentation only: no code, no scaffolding.
+
+The checklist can be filled in two mutually exclusive ways: via interactive Q&A (`01-gather-needs`) when starting from a free-form idea, or directly from a validated PRD (`06-gather-from-prd`) when one already exists — both paths converge on `02-propose-candidates`.
 
 ## Actions
 
@@ -17,8 +19,9 @@ Plays the role of technical architect for a new SaaS project. Walks the user thr
 | 03  | `audit-candidates`    | Spawn parallel agents to validate each candidate, emit verdict | candidates table   |
 | 04  | `pick-and-design`     | User picks winner; generate folder tree + Mermaid diagram      | audit report       |
 | 05  | `write-install-md`    | Produce `aidd_docs/INSTALL.md`                                 | design + decisions |
+| 06  | `gather-from-prd`     | Derive the filled checklist from a validated PRD (alternative entry, no Q&A) | validated PRD path |
 
-Run `01 → 02 → 03 → 04 → 05`. The audit (03) gates: if every candidate fails, loop back to 02 or 01.
+Run `(01 | 06) → 02 → 03 → 04 → 05`. Use `01` for free-form ideas, `06` when a validated PRD exists — they are mutually exclusive entry points. The audit (03) gates: if every candidate fails, loop back to 02 or 01.
 
 ## Transversal rules
 

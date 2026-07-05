@@ -17,7 +17,7 @@ Produces a prioritized backlog of INVEST-compliant user stories, each estimated 
 | 03  | `draft-stories`   | Write each candidate as an INVEST story with acceptance criteria and a functional DoD | candidate stories from 02              |
 | 04  | `estimate-impact` | Rate each story for effort (points) and impact on the existing system | drafted stories from 03                |
 | 05  | `prioritize`      | Rank the backlog by value against effort and impact                  | estimated stories from 04              |
-| 06  | `sync-tracker`    | Gate on Definition of Ready, get explicit approval, save to the tracker | ranked backlog from 05                 |
+| 06  | `sync-tracker`    | Gate on Definition of Ready, get explicit approval, save to the resolved target | ranked backlog from 05, `output_target` (default: file) |
 
 Run `01 → 02 → 03 → 04 → 05 → 06`, passing each `## Test` first. A single story skips the epic split.
 
@@ -27,8 +27,11 @@ Run `01 → 02 → 03 → 04 → 05 → 06`, passing each `## Test` first. A sin
 - **Definition of Ready**: acceptance criteria, dependencies, story points, and an impact rating are set, with zero blocking questions, before save.
 - **Definition of Done**: each story carries a pragmatic, functional DoD, observable user-facing conditions that mean the goal is met. Functional only, never technical delivery steps.
 - **Lean clarification**: at most 3 questions per iteration; focus on user needs, not technical aspects.
-- Always wait for explicit user validation before saving to the tracker.
-- The save target is the configured ticketing tool from project memory; never assume a specific tool.
+- Always wait for explicit user validation before saving.
+- **Output target**: `output_target` (`file | ticket | both`, default `file`) controls where the
+  ranked backlog is saved. `file` writes to `aidd_docs/tasks/`; `ticket` saves to the configured
+  ticketing tool from project memory (never assume a specific tool); `both` does both. `ticket`
+  and `both` degrade to `file` with an explicit warning when no ticketing tool is configured.
 
 ## References
 
