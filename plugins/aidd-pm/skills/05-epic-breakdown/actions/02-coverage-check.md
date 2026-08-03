@@ -27,13 +27,11 @@ This action is read-only; it makes no writes.
    name); ignore all other content under the section, intro prose, bullet lists, tables, and
    sub-subsections that do not match the pattern. The collected headings, in document order, form
    the authoritative feature set `F_PRD = {F1, F2, …, FN}`. Derive each feature's `feature_slug`
-   from `<name>` using the same deterministic normalization as `01-breakdown` step 3: lowercase
-   the entire name; strip diacritics/accents to ASCII equivalents (é→e, ê→e, è→e, à→a, â→a, ç→c,
-   î→i, ô→o, û→u, ü→u, ï→i, ë→e, and equivalents for all other combining diacritics); replace
-   every contiguous run of non-alphanumeric characters (spaces, apostrophes, hyphens, colons,
-   punctuation) with a single hyphen; trim any leading or trailing hyphens. Examples: `Centre
-   d'aide en libre-service` → `centre-d-aide-en-libre-service`; `Enquêtes de satisfaction` →
-   `enquetes-de-satisfaction`.
+   from `<name>` by the shared slug normalization:
+
+   ```text
+   @../references/slug-normalization.md
+   ```
 2. **Collect.** Enumerate all `.md` files in `epics_location` whose filenames match the pattern
    `*-epic-<NN>-*.md` (or read each file provided directly). For each file, parse the YAML
    frontmatter and extract `epic_id` and `source_features`. Build the epic set
@@ -47,7 +45,7 @@ This action is read-only; it makes no writes.
 4. **Matrix.** Produce one row per PRD feature (`### Feature N - <name>` → `EPIC-<slug>` or `—
    (missing)` → covered/missing), and append a summary row: `<covered count> / <total count>
    features covered`.
-5. **Verify idempotence.** When called after multiple `01-breakdown` runs on the same PRD,
+5. **Verify.** When called after multiple `01-breakdown` runs on the same PRD,
    collect the set of distinct `epic_id` values found in `epics_location` after the most recent
    run.
    - If a prior snapshot is available (e.g. from a first-run output record): assert the set of

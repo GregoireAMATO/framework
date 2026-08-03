@@ -29,6 +29,10 @@ Dispatch by input: `prd_path` alone → `breakdown`; `prd_path` with `epics_loca
 - **No self-validation**: action `01-breakdown` does NOT self-validate after writing. The caller is responsible for two distinct verification steps. First, run action `02-coverage-check` to verify 100% PRD coverage and idempotence (the in-skill structural verifier). Second, spawn a reviewer with `assets/epic-validator.yml` to validate quality (structure, TBD correctness, no implementation detail). Reviewer findings return through `breakdown` for correction or explicit TBD.
 - **Language**: all skill artifacts are authored in English regardless of the source PRD's language.
 
+## References
+
+- `references/slug-normalization.md`: the deterministic feature-slug algorithm shared by `01-breakdown` and `02-coverage-check`.
+
 ## Assets
 
 - `assets/epic-template.md`: canonical epic artifact body.

@@ -19,12 +19,12 @@ re-asked here).
 
 ## Process
 
-1. **Break down.** Run `aidd-pm:05-epic-breakdown` action `01-breakdown` with `prd_path` = the
+1. **Decompose.** Run `aidd-pm:05-epic-breakdown` action `01-breakdown` with `prd_path` = the
    validated PRD path from action 03 and `output_target` = `output_mode` (propagated unchanged
    from `01-preflight`, never re-asked). Let `01-breakdown` validate the PRD, parse its Core
    Features, derive N epics, and write the epic artifacts to the chosen output target, without
    intervening in epic derivation.
-2. **Check coverage.** Run action `02-coverage-check` with `prd_path` = the same validated PRD
+2. **Verify.** Run action `02-coverage-check` with `prd_path` = the same validated PRD
    path and `epics_location` = the output location returned by `01-breakdown`. Let it compare
    PRD features against produced epics and emit the coverage matrix and verdict.
    - If coverage is not 100%, route the gap report back into `01-breakdown` for correction, then

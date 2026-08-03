@@ -47,13 +47,12 @@ TBD count), and `notes` listing warnings, degrade notices, and unresolved questi
    prose, bullet lists, tables, and any sub-subsections that do not match the pattern. Produce an
    ordered list `[F1, F2, …, FN]`. Each entry records:
    - The heading text verbatim, and its 1-based feature order index `N` as written in the PRD.
-   - A feature slug derived from `<name>` by this deterministic normalization: lowercase the
-     entire name; strip diacritics/accents to ASCII equivalents (é→e, ê→e, è→e, à→a, â→a, ç→c,
-     î→i, ô→o, û→u, ü→u, ï→i, ë→e, and equivalents for all other combining diacritics); replace
-     every contiguous run of non-alphanumeric characters (spaces, apostrophes, hyphens, colons,
-     punctuation) with a single hyphen; trim any leading or trailing hyphens. Examples: `Centre
-     d'aide en libre-service` → `centre-d-aide-en-libre-service`; `Enquêtes de satisfaction` →
-     `enquetes-de-satisfaction`; `Orchestrateur` → `orchestrateur`.
+   - A `feature_slug` derived from `<name>` by the shared deterministic slug normalization
+     (same algorithm as `02-coverage-check`):
+
+     ```text
+     @../references/slug-normalization.md
+     ```
    - The `FR<N>.<y>` identifiers found in the feature's subsection body.
    This list is the authoritative scope for coverage: every item must map to exactly one epic.
 4. **Partition.** For each feature `Fi` in order, assign one epic `Ei` (1:1 by default; M:1
