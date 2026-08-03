@@ -1,61 +1,45 @@
 # 01 - Preflight
 
-Guard action. Verifies that AIDD is installed and captures the output mode for the session.
-No chain delegation. No scaffolding. Halts the entire flow if the prerequisite is not met.
+Guard action that verifies AIDD is installed and captures the output mode for the session.
 
-## Inputs
+**No delegation, no scaffolding.** Halts the entire flow if the prerequisite is not met.
 
-```yaml
-raw_idea: <the user's product idea, captured from the invocation message>
-```
+## Input
 
-## Outputs
+The user's raw product idea, captured from the invocation message.
 
-```yaml
-go_no_go: go | abort
-output_mode: file | ticket | both     # captured once; default = file; propagated to actions 05 and 06
-```
+## Output
 
-If `go_no_go = abort`, no further action runs. No files or directories are created.
+`go_no_go` (`go` or `abort`) and, when `go`, `output_mode` (`file | ticket | both`, captured once,
+default `file`, propagated to actions 05 and 06). If `go_no_go = abort`, no further action runs
+and no files or directories are created.
 
 ## Process
 
-### Step 1 — AIDD installed check
+1. **Check.** Verify that `aidd_docs/` exists at the repo root.
+   - If absent, return the message below and halt immediately. Produce nothing, create nothing,
+     do not scaffold the framework or the memory bank, do not proceed to step 2.
 
-Verify that `aidd_docs/` exists at the repo root.
+     > **AIDD is not installed (`aidd_docs/` not found). Install AIDD first; this orchestrator
+     > does not scaffold the framework or the memory bank.**
+   - If present, continue to step 2.
+2. **Capture.** Ask the user once where epics and user stories should be saved:
 
-If **absent**: return the following message and **halt immediately**. Produce nothing. Create
-nothing. Do not scaffold the framework or the memory bank. Do not proceed to step 2.
+   > **Where should epics and user stories be saved?**
+   >
+   > - `file` — written to `aidd_docs/` (default, no external tools required)
+   > - `ticket` — created in the configured ticketing tool
+   > - `both` — written to file AND created as tickets
+   >
+   > Press Enter to accept the default (`file`).
 
-> **AIDD is not installed (`aidd_docs/` not found). Install AIDD first; this orchestrator does
-> not scaffold the framework or the memory bank.**
+   Wait for the response. Store it as `output_mode`, defaulting to `file` on an empty reply.
+3. **Confirm.** Emit `go_no_go = go` and report readiness:
 
-If **present**: continue to step 2.
+   > **Preflight passed.** AIDD is installed. Output mode: `<output_mode>`.
+   > Starting the greenfield chain: brainstorm → prd → bootstrap → epic-breakdown → user-stories.
 
-### Step 2 — Capture output mode
-
-Ask the user once:
-
-> **Where should epics and user stories be saved?**
->
-> - `file` — written to `aidd_docs/` (default, no external tools required)
-> - `ticket` — created in the configured ticketing tool
-> - `both` — written to file AND created as tickets
->
-> Press Enter to accept the default (`file`).
-
-Wait for the response. Store as `output_mode`. Default is `file` if the user presses Enter without
-typing a choice.
-
-### Step 3 — Emit go/no-go
-
-Confirm readiness to the user:
-
-> **Preflight passed.** AIDD is installed. Output mode: `<output_mode>`.
-> Starting the greenfield chain: brainstorm → prd → bootstrap → epic-breakdown → user-stories.
-
-Emit `go_no_go = go` and `output_mode = <captured value>` for downstream actions.
-Do not re-ask `output_mode` in any subsequent action.
+   Do not re-ask `output_mode` in any subsequent action.
 
 ## Test
 

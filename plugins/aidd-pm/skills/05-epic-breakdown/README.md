@@ -62,29 +62,11 @@ Use skill aidd-pm:05-epic-breakdown coverage-check for <prd_path> with epics_loc
 
 ## Outputs
 
-### `breakdown` action
-
-- One epic artifact per Core Feature (or explicit multi-feature grouping), written to:
-  `aidd_docs/tasks/<prd_yyyy_mm>/<prd_yyyy_mm_dd>-<prd_slug>-epic-<NN>-<feature_slug>.md`
-- When `output_target: ticket` or `both`: one tracker issue per epic, created via
-  `aidd-vcs:04-issue-create`.
-- A coverage summary: list of features processed, epics produced, any TBD markers emitted.
-- No modifications to the source PRD.
-
-### `coverage-check` action
-
-- A coverage matrix: each PRD feature mapped to its corresponding epic.
-- Lists of missing features (not covered by any epic) and extra features (referenced by epics but
-  absent from the PRD).
-- Duplicate detection: any feature referenced by more than one epic.
-- A pass/fail verdict: passes only when every feature is covered by exactly one epic.
-
-## Idempotence
-
-Epic filenames and ticket titles embed the source PRD's date and slug (not the run date). Running
-`breakdown` twice on the same PRD produces the same file set: existing epics whose `epic_id` and
-source feature match are skipped rather than overwritten. Run `coverage-check` after two passes to
-confirm the epic set is unchanged.
+See [`actions/01-breakdown.md`](actions/01-breakdown.md) for the `breakdown` output shape (epic
+records, coverage summary, notes) and [`actions/02-coverage-check.md`](actions/02-coverage-check.md)
+for the `coverage-check` output shape (coverage matrix, missing/extra/duplicates, verdict). Both
+actions, including the idempotence guarantee across repeated runs, are detailed in
+[`SKILL.md`](SKILL.md).
 
 ## Technical details
 

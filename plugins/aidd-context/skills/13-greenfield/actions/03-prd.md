@@ -1,29 +1,24 @@
 # 03 - PRD
 
-Delegates PRD generation to `aidd-pm:03-prd` with an explicit instruction to leave
-§8 Technical Architecture as `TBD`. Routes the clarified idea in and the validated PRD path out.
-Contains no PRD-writing, template-filling, or section-authoring logic.
+Delegates PRD generation to `aidd-pm:03-prd` with an explicit instruction to leave §8 Technical
+Architecture as `TBD`, routing the clarified idea in and the validated PRD path out.
 
-## Inputs
+**No business logic.** Contains no PRD-writing, template-filling, or section-authoring logic of
+its own.
 
-```yaml
-clarified_idea: <the clarified idea approved at action 02's gate>
-```
+## Input
 
-Precondition: `clarified_idea` is present (gate at action 02 was approved).
+`clarified_idea`, the clarified idea approved at action 02's gate. Precondition: `clarified_idea`
+is present (the gate at action 02 was approved).
 
-## Outputs
+## Output
 
-```yaml
-prd_path: <path to the saved PRD file; must carry Status: Approved>
-```
+`prd_path`, the path to the saved PRD file; must carry `Status: Approved`.
 
 ## Process
 
-Delegate to **`aidd-pm:03-prd`**:
-
-1. Pass `clarified_idea` as the `feature_description` input to `aidd-pm:03-prd`, together with
-   the following explicit instruction passed verbatim to the delegate:
+1. **Delegate.** Pass `clarified_idea` as the `feature_description` input to `aidd-pm:03-prd`,
+   together with the following instruction passed verbatim to the delegate:
 
    > **Greenfield run — §8 Technical Architecture must be left as `TBD`.**
    > This PRD is the input to a bootstrap step that deduces the technical architecture from the
@@ -31,20 +26,20 @@ Delegate to **`aidd-pm:03-prd`**:
    > database choice in §8 Technical Architecture. Leave the entire section as `TBD`. The stack
    > will be filled by the bootstrap step after this PRD is validated.
 
-2. Let `aidd-pm:03-prd` run its standard flow: parse input, draft per its template, iterate with
-   the user, validate, save to `aidd_docs/tasks/<yyyy_mm>/<yyyy_mm_dd>-<feature_name>-prd.md`.
-   Do not intervene in PRD drafting.
-3. Receive the saved PRD path from the delegate.
+2. **Run.** Let `aidd-pm:03-prd` run its standard flow, parse input, draft per its template,
+   iterate with the user, validate, save to
+   `aidd_docs/tasks/<yyyy_mm>/<yyyy_mm_dd>-<feature_name>-prd.md`, without intervening in
+   PRD drafting.
+3. **Receive.** Take the saved PRD path from the delegate.
+4. **Gate.** Confirm the validated PRD:
 
-**Gate — confirm the validated PRD:**
+   > PRD saved at `<prd_path>`. Please confirm it carries `Status: Approved` and that §8 Technical
+   > Architecture is `TBD`. Reply `yes` to continue or provide feedback to refine the PRD.
 
-> PRD saved at `<prd_path>`. Please confirm it carries `Status: Approved` and that §8 Technical
-> Architecture is `TBD`. Reply `yes` to continue or provide feedback to refine the PRD.
-
-On feedback: re-invoke `aidd-pm:03-prd` with the refinement context before re-proposing the gate.
-
-On approval: store `prd_path` (the path to the validated PRD carrying `Status: Approved`) and
-proceed to `04-bootstrap`.
+   - On feedback, re-invoke `aidd-pm:03-prd` with the refinement context before re-proposing
+     the gate.
+   - On approval, store `prd_path` (the path to the validated PRD carrying `Status: Approved`)
+     and proceed to `04-bootstrap`.
 
 ## Test
 

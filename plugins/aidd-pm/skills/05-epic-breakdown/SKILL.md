@@ -1,25 +1,21 @@
 ---
 name: 05-epic-breakdown
-description: Break a validated PRD into N distinct epics covering 100% of its Core Features. Use when the user says "break down prd into epics", "create epics from prd", "epic breakdown", or invokes `/epic-breakdown`. Do NOT use for writing user stories, running the SDLC, or generating source code.
+description: Break a validated PRD into N distinct epics covering 100% of its Core Features. Use when the user says "break down prd into epics", "create epics from prd", or "epic breakdown". Do NOT use for writing user stories, running the SDLC, or generating source code.
+argument-hint: breakdown | coverage-check
 ---
 
 # Epic Breakdown
 
 Turns a validated PRD into a set of traceable epics, each scoped to one or more Core Features, ready for downstream user-story generation and SDLC planning.
 
-## Available actions
+## Actions
 
-| #   | Action             | Role                                                                                  | Input                                            |
-| --- | ------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| 01  | `breakdown`        | Validate PRD, parse Core Features, derive N epics, write to chosen output target      | prd_path (required), output_target (default: file) |
-| 02  | `coverage-check`   | Read-only: compare PRD features against produced epics, emit coverage matrix + verdict | prd_path (required), epics_location (required)   |
+| #   | Action           | Role                                                                                   | Input                                               |
+| --- | ---------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 01  | `breakdown`      | Validate PRD, parse Core Features, derive N epics, write to chosen output target        | prd_path (required), output_target (default: file)   |
+| 02  | `coverage-check` | Read-only: compare PRD features against produced epics, emit coverage matrix + verdict  | prd_path (required), epics_location (required)        |
 
-## Default flow
-
-Non-sequential. The router dispatches based on context:
-
-- `prd_path` provided alone -> `breakdown`
-- `prd_path` + `epics_location` provided for audit purposes -> `coverage-check`
+Dispatch by input: `prd_path` alone → `breakdown`; `prd_path` with `epics_location` for audit purposes → `coverage-check`.
 
 ## Transversal rules
 
@@ -30,25 +26,11 @@ Non-sequential. The router dispatches based on context:
 - **Idempotence**: epic identity derives from the source PRD's date+slug and the feature slug, never from the run date. A second run on the same PRD skips already-produced epics rather than duplicating them.
 - **Ticket delegation**: when `output_target` is `ticket` or `both`, delegate each epic creation to `aidd-vcs:04-issue-create`. Degrade to `file` mode with a warning when no ticketing tool is configured.
 - **Source traceability**: every epic artifact explicitly references the source PRD path and the `### Feature N` heading(s) it derives from.
-- **No self-validation**: action `01-breakdown` does NOT self-validate after writing. The caller is
-  responsible for two distinct verification steps: (1) run action `02-coverage-check` to verify
-  100% PRD coverage and idempotence (the in-skill structural verifier); (2) spawn a reviewer with
-  `@assets/epic-validator.yml` to validate quality (structure, TBD correctness, no implementation
-  detail). Reviewer findings return through `breakdown` for correction or explicit TBD.
+- **No self-validation**: action `01-breakdown` does NOT self-validate after writing. The caller is responsible for two distinct verification steps. First, run action `02-coverage-check` to verify 100% PRD coverage and idempotence (the in-skill structural verifier). Second, spawn a reviewer with `assets/epic-validator.yml` to validate quality (structure, TBD correctness, no implementation detail). Reviewer findings return through `breakdown` for correction or explicit TBD.
 - **Language**: all skill artifacts are authored in English regardless of the source PRD's language.
-
-## References
-
-- Upstream: `aidd-pm:04-spec` (the spec this skill's epics serve), `aidd-pm:03-prd` (the PRD it consumes).
-- Downstream: `aidd-pm:02-user-stories` (generates user stories from each epic).
-- Ticketing: `aidd-vcs:04-issue-create` (creates tracker issues for `ticket` / `both` modes).
 
 ## Assets
 
-- `@assets/epic-template.md`: canonical epic artifact body.
-- `@assets/epic-validator.yml`: reviewer checklist for validating produced epics.
-- `@assets/epic-index-template.md`: optional feature→epic mapping index written by `breakdown` in file/both mode; filename derived from the source PRD date+slug (deterministic, never run-date).
-
-## External data
-
-- None.
+- `assets/epic-template.md`: canonical epic artifact body.
+- `assets/epic-validator.yml`: reviewer checklist for validating produced epics.
+- `assets/epic-index-template.md`: optional feature→epic mapping index written by `breakdown` in file/both mode; filename derived from the source PRD date+slug (deterministic, never run-date).

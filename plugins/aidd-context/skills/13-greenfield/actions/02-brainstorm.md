@@ -1,43 +1,36 @@
 # 02 - Brainstorm
 
-Delegates idea clarification to `aidd-refine:01-brainstorm`. Routes the raw idea in and the
-clarified idea out. Contains no brainstorming, probing, or idea-shaping logic.
+Delegates idea clarification to `aidd-refine:01-brainstorm`, routing the raw idea in and the
+clarified idea out.
 
-## Inputs
+**No business logic.** Contains no brainstorming, probing, or idea-shaping logic of its own.
 
-```yaml
-raw_idea: <the user's product idea from preflight>
-```
+## Input
 
-Precondition: `01-preflight` returned `go_no_go = go`. If preflight aborted, this action does not run.
+The user's raw product idea from `01-preflight`. Precondition: `01-preflight` returned
+`go_no_go = go`; if preflight aborted, this action does not run.
 
-## Outputs
+## Output
 
-```yaml
-clarified_idea: <the clarified idea artifact produced by aidd-refine:01-brainstorm>
-```
-
-The clarified idea is held in conversation context and passed to action 03.
+`clarified_idea`, the clarified idea artifact produced by `aidd-refine:01-brainstorm`, held in
+conversation context and passed to action 03.
 
 ## Process
 
-Delegate to **`aidd-refine:01-brainstorm`**:
+1. **Delegate.** Pass `raw_idea` as the input to `aidd-refine:01-brainstorm`. Let the skill run
+   its full internal flow, `01-capture → probe/integrate loop → 04-finalize`, without intervening
+   in the clarification process.
+2. **Receive.** Take the clarified idea artifact returned by `aidd-refine:01-brainstorm` action
+   `04-finalize`.
+3. **Present.** Show the clarified idea to the user.
+4. **Gate.** Confirm before continuing:
 
-1. Pass `raw_idea` as the input to `aidd-refine:01-brainstorm`. Let the skill run its full internal
-   flow: `01-capture → probe/integrate loop → 04-finalize`. Do not intervene in the clarification
-   process.
-2. Receive the clarified idea artifact returned by `aidd-refine:01-brainstorm` action `04-finalize`.
-3. Present the clarified idea to the user.
+   > The idea has been clarified. Do you confirm this is the right scope to take into the PRD?
+   > Reply `yes` to continue or provide feedback to re-brainstorm.
 
-**Gate — confirm the clarified idea:**
-
-> The idea has been clarified. Do you confirm this is the right scope to take into the PRD?
-> Reply `yes` to continue or provide feedback to re-brainstorm.
-
-On feedback: re-invoke `aidd-refine:01-brainstorm` with the updated context before re-proposing
-the gate.
-
-On approval: store `clarified_idea` and proceed to `03-prd`.
+   - On feedback, re-invoke `aidd-refine:01-brainstorm` with the updated context before
+     re-proposing the gate.
+   - On approval, store `clarified_idea` and proceed to `03-prd`.
 
 ## Test
 
