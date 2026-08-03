@@ -27,10 +27,21 @@ steps. Documentation only - no code, no scaffolding.
 Use skill aidd-context:01-bootstrap
 ```
 
-The skill walks 5 atomic actions in sequence:
+The skill supports two mutually exclusive entry modes, both converging on the
+same downstream actions:
+
+**Entry mode A — Q&A (default, start from a free-form idea):**
 
 1. `gather-needs` - Q&A across the 24-item checklist (18 user-input, 6
    derived).
+
+**Entry mode B — from PRD (start from a validated PRD):**
+
+1. `gather-from-prd` - derive the filled checklist from a validated PRD
+   (no Q&A; provide `prd_path` to a PRD with a `Status: Approved` line).
+
+**Shared downstream actions (both modes):**
+
 2. `propose-candidates` - derive 2-3 candidate stacks and render a
    comparison table.
 3. `audit-candidates` - spawn parallel agents to validate each candidate
@@ -46,7 +57,9 @@ The skill walks 5 atomic actions in sequence:
 
 ## Prerequisites
 
-- A clear (or at least loosely-formed) product idea to discuss.
+- A clear (or at least loosely-formed) product idea to discuss, **or** a
+  validated PRD (a file containing `Status: Approved` and a `## 4. Core
+  Features` section) when using the from-PRD entry mode.
 - A working directory where `aidd_docs/INSTALL.md` can be written.
 
 ## Technical details

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "aidd-pm",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Product management: ticket-info, user-stories, prd, spec",
   "author": {
     "name": "AI-Driven Dev",
@@ -11,14 +11,16 @@
     "./skills/01-ticket-info",
     "./skills/02-user-stories",
     "./skills/03-prd",
-    "./skills/04-spec"
+    "./skills/04-spec",
+    "./skills/05-epic-breakdown"
   ],
   "keywords": [
     "product-management",
     "user-stories",
     "prd",
     "specification",
-    "tickets"
+    "tickets",
+    "epic-breakdown"
   ],
   "repository": "https://github.com/ai-driven-dev/framework",
   "homepage": "https://ai-driven.dev",

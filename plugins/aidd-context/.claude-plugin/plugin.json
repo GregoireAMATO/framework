@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "aidd-context",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Knowledge production: project bootstrap, project init, generation of context artifacts (skills, agents, rules, commands, hooks), mermaid diagrams, learn, explore, recipe how-to sheets",
   "author": {
     "name": "AI-Driven Dev",
@@ -20,7 +20,8 @@
     "./skills/09-mermaid",
     "./skills/10-learn",
     "./skills/11-explore",
-    "./skills/12-cook"
+    "./skills/12-cook",
+    "./skills/13-greenfield"
   ],
   "keywords": [
     "context",
@@ -28,7 +29,8 @@
     "explore",
     "skills",
     "mermaid",
-    "onboard"
+    "onboard",
+    "greenfield"
   ],
   "repository": "https://github.com/ai-driven-dev/framework",
   "homepage": "https://ai-driven.dev",
